@@ -1,0 +1,31 @@
+.dropdown-list {
+	background-color: #034078;
+	color: #fff;
+	font-size: 12px;
+	padding: 4px;
+	border: 0;
+	margin: 0;
+	border-radius: 5px;
+	width: 100px;
+	text-overflow: '';
+	text-indent: 0.01px;
+}
+.movies-dropdown-list {
+	background-color: #fff;
+	color: #034078;
+	font-size: 12px;
+	padding: 4px;
+	border: 0;
+	margin: 0 7.5px;
+	width: 100px;
+	text-overflow: '';
+	text-indent: 0.01px;
+}
+
+.dropdown-list:focus {
+	outline: none;
+}
+
+.movies-dropdown-list:focus {
+	outline: none;
+}

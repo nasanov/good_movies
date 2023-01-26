@@ -1,0 +1,22 @@
+extends layout.pug
+include utils.pug
+
+append head
+		//- add page specific styles by appending to the head
+		link(rel="stylesheet" href="/stylesheets/authForms.css")
+		link(rel="stylesheet" href="/stylesheets/components/buttons.css")
+		//- add page specific js
+		script(src="/javascripts/login-demo.js" type='module' defer)
+
+block content
+	div(class="loginWrap")
+		h1= title
+		form(action='/users/login' method = 'post' class='log-in-form')
+			+formField('Email', 'email', '', 'email', 'E-mail')
+			+formField('Password', 'password', '', 'password', 'Password')
+			input(type='hidden' name="_csrf" id='_csrf' value=csrfToken)
+			button(type='submit' id='submitButton' class="buttonPrimary") Submit
+			button(type='submit' id='demoButton' class="buttonSecondary") Demo
+			div(class='switchLink')
+				a(href='/users/signup') Not registered? Sign up here!
+		+errors(errors)

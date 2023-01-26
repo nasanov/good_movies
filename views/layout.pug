@@ -1,0 +1,41 @@
+doctype html
+html
+	head
+			block head
+				title="Good Movies"
+				link(rel='stylesheet' href='/stylesheets/reset.css')
+				link(rel='stylesheet' href='/stylesheets/footer.css')
+				link(rel='stylesheet' href='/stylesheets/components/nav.css')
+				script(src="https://kit.fontawesome.com/258a758bfe.js" crossorigin="anonymous")
+				script(src="/javascripts/footer.js" type="module")
+	body
+		nav
+			div(id='logo')
+				a(href='/')  Good Movies
+			ul(class='menu')
+				li
+					a(href='/') Home
+				li
+					a(href='/movies?page=1') Movies
+				li
+					a(href='/lists') Lists
+				li
+					a(href='/about') About
+				//  Figure out if statement to show Log Out instead of this VVVV when logged in.
+				if userId
+					li
+						a(href='/users/logout') Log Out
+				else
+					li
+						a(href='/users/login') Log In
+					li
+						a(href='/users/signup') Sign Up
+
+		block content
+		footer(class="footer")
+				a(href='/' class='footer-links') Home
+				a(href="https://github.com/danielshoun/good-movies" target="_blank")
+					i(class="fab fa-github footer-github")
+				a(href='/about' class='footer-links') About
+				button(class="scrollTop")
+					i(class="fas fa-arrow-up to-top-arrow")

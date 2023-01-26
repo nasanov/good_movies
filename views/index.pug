@@ -1,0 +1,21 @@
+extends layout
+include utils
+
+append head
+	//- add page specific styles by appending to the head
+	link(rel="stylesheet" href="/stylesheets/index.css")
+	//- add page specific js
+	script(src="/javascripts/index.js" type="module" defer)
+
+block content
+	div(class='blurb')
+		p(class='blurb-text') Deciding what to watch next? You're in the right place. Rate and review your favorite movies and add them to your personal watch lists.
+	div(class='main-content')
+		h2(class="category-title") Recently Released
+		div(class='movie-grid')
+			each movie in recentMovies
+				+movieDisplay(movie)
+		h2(class="category-title") Highest Rated
+		div(class='movie-grid')
+			each movie in bestMovies
+				+movieDisplay(movie)

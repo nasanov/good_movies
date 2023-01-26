@@ -1,0 +1,83 @@
+extends layout.pug
+include utils.pug
+
+append head
+	//- add page specific styles by appending to the head
+	link(rel="stylesheet" href="/stylesheets/movie-details.css")
+	link(rel="stylesheet" href="/stylesheets/reviews.css")
+	link(rel="stylesheet" href="/stylesheets/components/buttons.css")
+	link(rel="stylesheet" href="/stylesheets/components/dropdown.css")
+
+	//- add page specific js
+	script(src="https://kit.fontawesome.com/258a758bfe.js" crossorigin="anonymous")
+	script(src="/javascripts/movie-details.js" type="module" defer)
+
+block content
+	div(class='movie-details-container')
+		div(class='detail-container')
+
+			div(class='movie-title') #{movie.title}
+			div(class='movie-poster')
+				img(src=movie.poster)
+				if movieLists
+					div(class='add-to-list-container')
+						select(class='dropdown-list' movieId=movie.id)
+							each list in movieLists
+								option(value=list.id) #{list.name}
+						i(class="fas fa-plus add-to-list-button")
+				if prevRating
+					+ratingDiv(prevRating.score)
+				else
+					+ratingDiv('')
+			div(class='movie-details')
+				+movieDetail("Release Date", movie.releaseDate)
+				+movieDetail("Run Time", `${movie.runTime} min.`)
+				+movieDetail("Genres", movie.genres)
+				+movieDetail("Director", movie.director)
+				+movieDetail("Cast", movie.cast)
+				+movieDetail("Country", movie.country)
+				+movieDetail("Production Company", movie.productionCompany)
+				+movieDetail("Rated", movie.mpaaRating)
+				if avgRating === 'N/A'
+					+movieDetail("GoodMovies Rating", avgRating)
+				else
+					+movieDetail("GoodMovies Rating", `${avgRating} / 5.0`)
+				if movie.imdbRating
+					+movieDetail("IMDB Rating", `${movie.imdbRating} / 10.0`)
+				else
+					+movieDetail("IMDB Rating", `N/A`)
+				+movieDetail("Awards", movie.awards)
+
+		div(class='reviews')
+			if !ownReview
+				div(class='add-review-container')
+					div(class='add-review-header')
+						h3 Add Review
+					form(method="post" action=`/movies/${movie.id}`)
+						input(type="hidden" name="_csrf" id="_csrf" value=csrfToken)
+						textarea(rows="5" id="reviewText" name="reviewText" placeholder="Add your review here...")
+						if errors
+							+errors(errors)
+						button(type="submit" class="buttonPrimary addReviewBtn") Add Review
+			else
+				div(class='own-review-header')
+					h3 Your Review
+					i(class="fas fa-pencil-alt own-review-icon" id='edit-review-button' movieId=`${movie.id}`)
+					i(class="far fa-trash-alt" id='delete-review-button' class='own-review-icon' movieId=`${movie.id}`)
+				div(class='review own-review')
+					h3(class='username own-review-username')= ownReview.User.username
+					p(class='reviewText own-review-text')= ownReview.reviewText
+					span(class='date own-review-date')= ownReview.reviewDate
+			div(class='all-reviews-header')
+				h3 All Reviews
+			each review in reviews
+				div(class='review' )
+					h3(class='username')= review.User.username
+					if review.User.Ratings[0]
+						h3(class='review-rating')
+							- var i = 0;
+							while (i < review.User.Ratings[0].score)
+								span ★
+								- i++;
+					p(class='reviewText')= review.reviewText
+					span(class='date')= review.reviewDate

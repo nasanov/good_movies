@@ -1,0 +1,116 @@
+mixin formField(labelText, name, value, fieldType = 'text', placeholder = null, required="required")
+		div(class='form-group')
+				input(type=fieldType id=name name=name value=value placeholder=placeholder class='form-control')
+
+mixin errors(errors)
+		if errors
+			div(class="errorsContainer")
+				div The following errors occurred:
+				ul(class="ErrorsList")
+					each error in errors
+						li= error
+
+mixin movieDisplay(movie)
+	div(class='movie-container')
+		div(class='poster-container')
+			a(href=`/movies/${movie.id}`)
+				img(src=movie.poster class='poster-image' title=movie.title)
+		div(class='movie-title')
+			a(href=`/movies/${movie.id}` title=movie.title) #{movie.title}
+		div(class='movie-info')
+			span(class='movie-length') #{movie.runTime} min.&nbsp
+			span(class='movie-releaseDate') #{movie.releaseDate}
+
+mixin movieListTable(movieList, isAllList)
+	each movie in movieList.Movies
+		tr
+			td(class='posterCell')
+				a(href=`/movies/${movie.id}`)
+					img(src=movie.poster class='moviePoster')
+			td(class='titleCell')
+				a(href=`/movies/${movie.id}` class='movieLink') #{movie.title}
+			td #{movie.runTime} min.
+			td= movie.releaseDate
+			td= movie.imdbRating
+			td
+				if !isAllList
+					i(class="far fa-trash-alt" listId=movieList.id movieId = movie.id)
+				else
+					if movieList.name == 'Watched'
+						span ✔
+					else
+						i(class="fas fa-plus" listId=movieList.id movieId=movie.id)
+						p Add to Watched List
+
+mixin movieDetail(detailName, detailValue)
+	div(class='detail-entry')
+		span(class='detail-name') #{detailName}:&nbsp
+		span(class='detail-value') #{detailValue}
+
+mixin movieTable(movies)
+	each movie in movies
+		tr
+			td(class='posterCell')
+				a(href=`/movies/${movie.id}`)
+					img(src=movie.poster class='moviePoster')
+			td(class='titleCell')
+				a(href=`/movies/${movie.id}` class='movieLink') #{movie.title}
+			td #{movie.runTime} min.
+			td= movie.releaseDate
+			td= movie.imdbRating
+			//- td
+			//- 	if movieList.name == 'Watched'
+			//- 		span ✔
+			//- 	else
+			//- 		i(class="fas fa-plus" movieId=movie.id)
+			//- 		p Add to Watched List
+
+mixin pages(pageCount, currentPage, titleSearch, sortColumn, sortOrder)
+	.moviePageDiv
+		if currentPage != 1
+			button(class='buttonPrimary prevBtn' onclick=`window.location.href='/movies?page=${parseInt(currentPage) - 1}${titleSearch ? `&title=${titleSearch}` : ''}${sortColumn ? `&column=${sortColumn}` : ''}${sortOrder ? `&order=${sortOrder}` : ''}'`) Prev
+		- var n = 1;
+		select(class='pageSelect movies-dropdown-list' onChange="window.location.href=this.value")
+			//- option(value=`` selected) #{currentPage}
+			if pageCount > 1
+				while n < pageCount
+					option(value=`/movies?page=${n}${titleSearch ? `&title=${titleSearch}$` : ''}${sortColumn ? `&column=${sortColumn}` : ''}${sortOrder ? `&order=${sortOrder}` : ''}` class='moviePageOption' selected= (n == currentPage))= n
+					- ++n
+			else
+				option(value=`/movies?page=${n}&${titleSearch ? `title=${titleSearch}` : ''}` selected= (n == currentPage))= n
+		if currentPage != pageCount - 1 && pageCount !== 1
+			button(class='buttonPrimary nextBtn' onclick=`window.location.href='/movies?page=${parseInt(currentPage) + 1}${titleSearch ? `&title=${titleSearch}` : ''}${sortColumn ? `&column=${sortColumn}` : ''}${sortOrder ? `&order=${sortOrder}` : ''}'`) Next
+
+mixin ratingDiv(prevRating)
+	div(class='rating-container' movieId=movie.id prevRating=prevRating)
+		input(type='radio' id='star5' name='rate' value='5')
+		label(for='star5' title='text') 5 stars
+		input(type='radio' id='star4' name='rate' value='4')
+		label(for='star4' title='text') 4 stars
+		input(type='radio' id='star3' name='rate' value='3')
+		label(for='star3' title='text') 3 stars
+		input(type='radio' id='star2' name='rate' value='2')
+		label(for='star2' title='text') 2 stars
+		input(type='radio' id='star1' name='rate' value='1')
+		label(for='star1' title='text') 1 star
+
+mixin developerContent(name, gitHubLink, linkedInLink)
+	div(class='developer-content')
+		h3(class='developer-name') #{name}
+		div(class="profileLinks")
+			div(class='link-container')
+				a(href=gitHubLink class="aboutLink")
+					i(class="fab fa-github link-icon")
+					span GitHub
+			if linkedInLink !== ''
+				div(class='link-container')
+					a(href=linkedInLink class="aboutLink")
+						i(class="fab fa-linkedin link-icon")
+						span LinkedIn
+
+mixin sortHeaders(sortColumn, sortOrder, thisColumn, titleSearch)
+	if sortColumn === thisColumn
+		if sortOrder === 'ASC'
+			i(class="fas fa-arrow-up sort-arrow")
+		else if sortOrder === 'DESC'
+			i(class="fas fa-arrow-down sort-arrow")
